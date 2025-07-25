@@ -57,4 +57,9 @@ Fog devices have strict memory constraints (often 4 - 8 GB RAM) and compute. Sta
 2. **Activation-weight quantization:** It observes that not all weights are critical. By protecting just 1% of sensitive weights [AWQ (Activation-aware Weight Quantization)](https://arxiv.org/abs/2306.00978) can quantize the rest aggressively.
 3. **Weight pruning:** Methods such as [SparseGPT](https://arxiv.org/pdf/2301.00774) removes less important connections and updates the remaining weights.
 4. **Structure pruning:** This means removing entire neuron, attention head or even layer to shrink the model. For instance, [LLM Pruner](https://proceedings.neurips.cc/paper_files/paper/2023/hash/44956951349095f74492a5471128a7e0-Abstract-Conference.html) identifies "non-critical coupled structures" and prunes them out. LLM Pruner pruned LLaMA-7B by [~20%](https://blogs.novita.ai/unveiling-llm-pruner-techniques-doubling-inference-speed/#:~:text=Referencing%20the%20table%20below%2C%20pruning,18%25%20increase%20in%20inference%20speed.) with virtually no performance loss after a brief fine-tuning. Other examples are: [Tailored-LLaMA](https://arxiv.org/html/2410.19185v2#:~:text=Firstly%2C%20how%20can%20we%20optimize,prompts%20consistently%20yields%20higher%20accuracy.) and [SlimGPT](https://neurips.cc/virtual/2024/poster/95477#:~:text=However%2C%20SlimGPT%20with%20finetuning%20still%20leads%20on%20most%20of%20the%20tasks.&text=PPL%20&%20Commonsense%20Reasoning%20&%20MMLU%20evaluations,solely%20on%20lightweight%20LoRA%20finetuning.).
+5. Knowledge distillation
+6. LoRA
+#### Inference optimization techniques
+#### Trade-offs and performance analysis
+#### Fog-based LLM applications
 

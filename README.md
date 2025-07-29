@@ -6,7 +6,7 @@ For the time being, let's assume that LLM models (referred to as just "models" i
 ## Language models available today
 
 ## A breif introduction to top AI platforms
-We will investigate the architectures of ChatGPT, Perplexity AI, and Google Gemini. They all share `Transformer` foundation, but each platform differs from one another to align with their goals: ChatGPT for a general-purpose chat utility, Perplexity AI for real-time search with references and citations, and Gemini for multimodal tasks. Generally, these companies keep their architecture closed. However, many things mentioned below are known as fact, while a few are based on rumors (which will be mentioned clearly). 
+We will investigate the architectures of ChatGPT, Perplexity AI, and Google Gemini. They all share a `Transformer` foundation, but each platform differs from one another to align with their goals: ChatGPT for a general-purpose chat utility, Perplexity AI for real-time search with references and citations, and Gemini for multimodal tasks. Generally, these companies keep their architecture closed. However, many things mentioned below are known as fact, while a few are based on rumors (which will be mentioned clearly). 
 ### ChatGPT (OpenAI)
 - Built on proprietary GPT series (GPT 3.5, GPT 4, and GPT 4o), with native support for text, image, and audio (making it multimodal too).
 - Evolved from a `decoder`-only Transformer.
@@ -19,13 +19,13 @@ Perplexity AI, a search assistant, orchestrates a mix of third-party and its own
 [Gemini](https://blog.google/technology/ai/google-gemini-ai/#performance) is one of the series of [foundational models](https://cloud.google.com/vertex-ai/generative-ai/docs/models) from Google. Gemini is a native multimodal Transformer model that was pre-trained from the start on different modalities such as text, images, code, and audio (In case of ChatGPT, GPT 4 and GPT 4o are multimodal). 
 
 ### RAG
-- All platforms (especially Perplexity) use RAG to response with external, up-to-date data.
+- All platforms (especially Perplexity) use RAG to respond with external, up-to-date data.
 - They use token embeddings using models like gemini-embedding-001 or OpenAI embeddings.
 - Such embeddings are stored in vector databases, such as for similarity search.
 ### Context and session management
-- ChatGPT uses history or summarization with max token size of 128K tokens.
+- ChatGPT uses history or summarization with a max token size of 128K tokens.
 - Perplexity uses attention-based memory with sessions.
-- Gemini supports upto 2M tokens window, uses context-caching.
+- Gemini supports up to 2M tokens window, uses context-caching.
 
 | Feature                   | ChatGPT                       | Perplexity AI                     | Google Gemini                    |
 | ------------------------- | ----------------------------- | --------------------------------- | -------------------------------- |
@@ -38,28 +38,44 @@ Perplexity AI, a search assistant, orchestrates a mix of third-party and its own
 | **Hardware**              | Azure + NVIDIA GPUs           | AWS + Cerebras + Vespa            | GCP + TPUs                       |
 
 ## LLM in Fog Computing
-LLM models due to their shear size thrive in cloud data centers with abundant GPU memory and computing capabilities. Running such models on resource-constraint devices require significant optimizations:
+LLM models, due to their sheer size, thrive in cloud data centers with abundant GPU memory and computing capabilities. Running such models on resource-constrained devices requires significant optimizations:
 ### Smaller, efficient Transformer variants 
-Fog devices have strict memory constraints (often 4 - 8 GB RAM) and compute. Standard Transformers are too heavy for such devices. Some of the optimizations are as follow:
+Fog devices have strict memory constraints (often 4 - 8 GB RAM) and computing. Standard Transformers are too heavy for such devices. Some of the optimizations are as follows:
 1. **Self-attention:** [Linformer](https://arxiv.org/abs/2006.04768) approximates the [attention-matrix](https://medium.com/@gginis/the-attention-mechanism-in-deep-learning-an-example-fb6b27c30cff) by a [low-rank](https://www.ibm.com/think/topics/lora#:~:text=This%20method%20focuses%20on%20the,computing%20power%20and%20training%20time) product, cutting complexity to a linear time with minimal accuracy loss.
-2. **Replacing self-attention layer:** [FNeT](https://www.geeksforgeeks.org/deep-learning/fnet-a-transformer-without-attention-layer/), a Transformer without an Attention layer yeilds model that train ~70-80% faster than [BERT](https://arxiv.org/abs/1810.04805) with only slight accuracy degradation.
-3. **Parameter sharing:** Another design approach is to reduce total parameter count while retaining depth of the model. [ALBERT](https://arxiv.org/pdf/1909.11942) demonstrates two such techniques: 1) Factorized embeddings and 2) Cross-layer parameter sharing.
-4. **Sparse Mixture-of-Experts (MoE) Models:** The difference between a sparse and a dense MoE lies in their activation and computation during the inference. A sparse MoE activates only a small subset of it's sub-network (experts) for each input token whereas dense MoE considers all experts. Generally, models are trained across all experts (dense MoE) but utilizing sparse activation for the inference - [Dense training, Sparse Inference](https://arxiv.org/abs/2404.05567). Examples: Alibaba’s [Qwen-1.5 MoE](https://qwenlm.github.io/blog/qwen-moe/#:~:text=Introduction,resource%20utilization%20without%20compromising%20performance.) (14.3B total parameters, top-2 experts active) uses only 2.7B parameters per inference and outperforms dense 7B models. Another example is Contextual AI's [OLMoE](https://openreview.net/forum?id=xXTkbTBmqq) where only 1B parameters are active per token claims that the model can [easly run on edge devices](https://contextual.ai/olmoe-mixture-of-experts/#:~:text=By%20Niklas%20Muennighoff,devices%2C%20vehicles%2C%20IoT). 
+2. **Replacing self-attention layer:** [FNeT](https://www.geeksforgeeks.org/deep-learning/fnet-a-transformer-without-attention-layer/), a Transformer without an Attention layer yields a model that trains ~70-80% faster than [BERT](https://arxiv.org/abs/1810.04805) with only slight accuracy degradation.
+3. **Parameter sharing:** Another design approach is to reduce the total parameter count while retaining the depth of the model. [ALBERT](https://arxiv.org/pdf/1909.11942) demonstrates two such techniques: 1) Factorized embeddings and 2) Cross-layer parameter sharing.
+4. **Sparse Mixture-of-Experts (MoE) Models:** The difference between a sparse and a dense MoE lies in their activation and computation during inference. A sparse MoE activates only a small subset of its sub-network (experts) for each input token, whereas dense MoE considers all experts. Generally, models are trained across all experts (dense MoE) but utilizing sparse activation for the inference - [Dense training, Sparse Inference](https://arxiv.org/abs/2404.05567). Examples: Alibaba’s [Qwen-1.5 MoE](https://qwenlm.github.io/blog/qwen-moe/#:~:text=Introduction,resource%20utilization%20without%20compromising%20performance.) (14.3B total parameters, top-2 experts active) uses only 2.7B parameters per inference and outperforms dense 7B models. Another example is Contextual AI's [OLMoE](https://openreview.net/forum?id=xXTkbTBmqq), where only 1B parameters are active per token, claiming that the model can [easily run on edge devices](https://contextual.ai/olmoe-mixture-of-experts/#:~:text=By%20Niklas%20Muennighoff,devices%2C%20vehicles%2C%20IoT). 
 5. **Weight offloading:** Allows storing parts of LLM in a cheaper, slower memory (CPU RAM or SSD) and loading them to GPU on demand - [Source](https://dl.acm.org/doi/10.1145/3719330.3721230). 
 ### Device-specific architecture choices
-1. **SBCs:** For devices like Raspberry Pi, the model must be extremely compact. Projects like [llama.cpp]() [demonstrate](https://github.com/ggml-org/llama.cpp/issues/58) running 7B parameter Transformer with a 4-bit integer weight on a Pi 4 (4 GB). Realistically, 2-3B parameter models can be [used](https://itsfoss.com/llms-for-raspberry-pi/#:~:text=As%20you%20can%20see%20in,Raspberry%20Pi%205%20was%20impressive) on a pi-class hardware.
+1. **SBCs:** For devices like Raspberry Pi, the model must be extremely compact. Projects like [llama.cpp]() [demonstrate](https://github.com/ggml-org/llama.cpp/issues/58) running 7B parameter Transformer with a 4-bit integer weight on a Pi 4 (4 GB). Realistically, 2-3B parameter models can be [used](https://itsfoss.com/llms-for-raspberry-pi/#:~:text=As%20you%20can%20see%20in,Raspberry%20Pi%205%20was%20impressive) on a Pi-class hardware.
 2.  **GPU-enabled edge devices:** Devices such as Jetson Orin can host large models as compared to Pis. For example, Nvidia demonstrated models up to 7B parameters [running](https://github.com/NVIDIA/TensorRT-LLM/blob/v0.12.0-jetson/README4Jetson.md) on Jetson Orin using TensorRT optimization.
 3. **Memory bandwidth reduction:**  Multi-Query Attention (MQA) reduces memory space and bandwidth needed for inference computation by [sharing key and value head across all query heads](https://fireworks.ai/blog/multi-query-attention-is-all-you-need).
 4. **Grouped-Query Attention (GQA) as a MQA Extension:** GQA is an interpolation between Multi-headed Attention (MHA) and MQA. Mistral 7B uses GQA for [faster inference](https://www.datacamp.com/tutorial/mistral-7b-tutorial).
 ### Optimization techniques
 #### Model compression methods
-1. **Parameter-weight Quantization:** By using fewer bits to represent weights, model size drops drastically. Post-training Quantization (PTQ) methods such as GPTQ can quantize weight to 3-4 bit integer while calibrating to minimize the errors induced in the layer's output. The [result](https://arxiv.org/abs/2504.02118) is 3-4.5x faster inference on GPUs with minimal accuracy loss.
-2. **Activation-weight quantization:** It observes that not all weights are critical. By protecting just 1% of sensitive weights [AWQ (Activation-aware Weight Quantization)](https://arxiv.org/abs/2306.00978) can quantize the rest aggressively.
+1. **Parameter-weight Quantization:** By using fewer bits to represent weights, model size drops drastically. Post-training Quantization (PTQ) methods such as GPTQ can quantize weights to 3-4 bit integers while calibrating to minimize the errors induced in the layer's output. The [result](https://arxiv.org/abs/2504.02118) is 3-4.5x faster inference on GPUs with minimal accuracy loss.
+2. **Activation-weight quantization:** It observes that not all weights are critical. By protecting just 1% of sensitive weights [AWQ (Activation-aware Weight Quantization)](https://arxiv.org/abs/2306.00978), the rest can be quantized aggressively.
 3. **Weight pruning:** Methods such as [SparseGPT](https://arxiv.org/pdf/2301.00774) removes less important connections and updates the remaining weights.
-4. **Structure pruning:** This means removing entire neuron, attention head or even layer to shrink the model. For instance, [LLM Pruner](https://proceedings.neurips.cc/paper_files/paper/2023/hash/44956951349095f74492a5471128a7e0-Abstract-Conference.html) identifies "non-critical coupled structures" and prunes them out. LLM Pruner pruned LLaMA-7B by [~20%](https://blogs.novita.ai/unveiling-llm-pruner-techniques-doubling-inference-speed/#:~:text=Referencing%20the%20table%20below%2C%20pruning,18%25%20increase%20in%20inference%20speed.) with virtually no performance loss after a brief fine-tuning. Other examples are: [Tailored-LLaMA](https://arxiv.org/html/2410.19185v2#:~:text=Firstly%2C%20how%20can%20we%20optimize,prompts%20consistently%20yields%20higher%20accuracy.) and [SlimGPT](https://neurips.cc/virtual/2024/poster/95477#:~:text=However%2C%20SlimGPT%20with%20finetuning%20still%20leads%20on%20most%20of%20the%20tasks.&text=PPL%20&%20Commonsense%20Reasoning%20&%20MMLU%20evaluations,solely%20on%20lightweight%20LoRA%20finetuning.).
-5. Knowledge distillation
-6. LoRA
+4. **Structure pruning:** This means removing entire neurons, attention heads, or even layers to shrink the model. For instance, [LLM Pruner](https://proceedings.neurips.cc/paper_files/paper/2023/hash/44956951349095f74492a5471128a7e0-Abstract-Conference.html) identifies "non-critical coupled structures" and prunes them out. LLM Pruner pruned LLaMA-7B by [~20%](https://blogs.novita.ai/unveiling-llm-pruner-techniques-doubling-inference-speed/#:~:text=Referencing%20the%20table%20below%2C%20pruning,18%25%20increase%20in%20inference%20speed.) with virtually no performance loss after a brief fine-tuning. Other examples are: [Tailored-LLaMA](https://arxiv.org/html/2410.19185v2#:~:text=Firstly%2C%20how%20can%20we%20optimize,prompts%20consistently%20yields%20higher%20accuracy.) and [SlimGPT](https://neurips.cc/virtual/2024/poster/95477#:~:text=However%2C%20SlimGPT%20with%20finetuning%20still%20leads%20on%20most%20of%20the%20tasks.&text=PPL%20&%20Commonsense%20Reasoning%20&%20MMLU%20evaluations,solely%20on%20lightweight%20LoRA%20finetuning.).
+5. **Knowledge distillation:** The Distillation method is used to train smaller "student" models to reproduce the behavior of the large "teacher" model. This method is used to compress knowledge. There are two types of distillation: a) **Black-box:** This method treats the teacher as an API (e.g., GPT-4 or ChatGPT) and uses it to generate training data for the student. The [Lion](https://arxiv.org/abs/2305.12870) project is one of the examples where a 7B model was fine-tuned (called Lion) on 70K Q/A pairs. The Q/A were prepared by carefully prompting ChatGPT with "hard" instructions and letting it produce answers. Despite not seeing the internals of ChatGPT, its architecture, logits, or the data on which it was created, Lion was able to achieve ~95% of ChatGPT's performance (effectively "importing" intelligence on a niche task); b) **White-box:** In this technique, one has full access to teacher's internal representations or logits. We distill a teacher model to a student model by matching the teacher's probability distribution on a diverse corpus. For instance, [MiniLLM](https://arxiv.org/abs/2306.08543) distilled a 13B teacher model to a 1.3B student model. It even used a reverse [Kullback-Leibler divergence (KLD)](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) loss (having the teacher adjust to the student's errors), which is suited for generative modeling. Models like [Vicuna](https://lmsys.org/blog/2023-03-30-vicuna/) and [Alpaca](https://crfm.stanford.edu/2023/03/13/alpaca.html) are the result of distilling ChatGPT/GPT-4 into 7B-13B open-source models (LLaMA) and cost under $600 to train. 
+7. **Low-Rank Factorization:** **LoRA** technique is generally used to perform task-specific updates by adding a pair of rank-r matrices (A and B) to a frozen weight. But, as shown by  [ALBERT](https://arxiv.org/pdf/1909.11942), one can use LoRA to factorize a large-scale matrix into smaller ones. Techniques such as [LASER](https://arxiv.org/abs/2312.13558)  post-process trained models by doing low-rank truncation of each layer's weights.
+8. **Quantized low-rank adapters:**
+9. **Data:**
+10. **Rotary Position Embedding (RoPE):**
+11. 
 #### Inference optimization techniques
+1. **Hardware-aware optimizations:**
+2. **Efficient caching and streaming:**
+##### Runtime frameworks and toolkits
+1. **TensorFlow Lite (TFLite):**
+2. **ONNX Runtime (ORT):**
+3. **PyTorch Mobile / TorchScript:**
+4. **Apache TVM (Tensor Virtual Machine):**
+5. **OpenVINO:**
+6. **NVIDIA TensorRT-LLM:**
+7. **DeepSpeed & Colossal-AI:**
+8. **Community libraries (llama.cpp, GGML):**
+9. 
 #### Trade-offs and performance analysis
 #### Fog-based LLM applications
 

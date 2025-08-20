@@ -13,4 +13,24 @@ ln -s llama_pure main_pure
 chmod +x llama_blas llama_pure main_blas main_pure run_one.sh
 ```
 
+You may get an illegal instruction error:
+```bash
+# sanity: interpreter itself?
+python3 -c 'print("ok")'
+
+# likely culprits (native extensions):
+python3 -c 'import numpy as np; print("numpy", np.__version__)'
+python3 -c 'import pandas as pd; print("pandas", pd.__version__)'
+python3 -c 'import pyarrow as pa; print("pyarrow", pa.__version__)'
+
+# pure-Python (should not SIGILL; if they do, it’s an indirect dependency)
+python3 -c 'import sacrebleu; print("sacrebleu", sacrebleu.__version__)'
+python3 -c 'from rouge_score import rouge_scorer; print("rouge_score ok")'
+python3 -c 'from datasets import load_dataset; print("datasets ok")'
+```
+Check one by one, find the culprit. Then uninstall and install it again:
+```bash
+python3 -m pip uninstall -y pandas pyarrow datasets
+python3 -m pip install --no-cache-dir --extra-index-url https://www.piwheels.org/simple   pandas==2.1.4 pyarrow==12.0.1 datasets
+```
 

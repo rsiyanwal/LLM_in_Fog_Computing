@@ -33,4 +33,10 @@ Check one by one, find the culprit. Then uninstall and install it again:
 python3 -m pip uninstall -y pandas pyarrow datasets
 python3 -m pip install --no-cache-dir --extra-index-url https://www.piwheels.org/simple   pandas==2.1.4 pyarrow==12.0.1 datasets==2.14.6
 ```
-
+CPU governer for speed-up
+```bash
+sudo apt-get install -y cpufrequtils
+echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+sudo systemctl disable --now ondemand || true
+sudo systemctl enable --now cpufrequtils
+```

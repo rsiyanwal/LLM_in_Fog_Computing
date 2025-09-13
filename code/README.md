@@ -40,3 +40,57 @@ echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
 sudo systemctl disable --now ondemand || true
 sudo systemctl enable --now cpufrequtils
 ```
+
+### Attaching energy sensor to Pi
+Sensor used: WCMCU-3221
+Install:
+```
+sudo apt update
+sudo apt install -y raspi-config
+sudo apt install -y i2c-tools python3-pip
+pip install adafruit-circuitpython-ina3221
+```
+Then run:
+```
+sudo raspi-config
+```
+Interface Options → I2C → Enable
+Edit the file:
+```
+sudo nano /boot/firmware/config.txt
+dtparam=i2c_arm=on
+```
+Attach the sensor as follows:
+1. Connect the SDA pin, SCL pin, VCC (VS) pin, and GND pin of the sensor to the pins SDA pin (GPIO2), SCL pin (GPIO3), 3.3V or 5V pin, and GND pin of the Raspberry Pi, respectively.
+2. Detect the sensor: `sudo i2cdetect -y 1`
+You may see an output like this:
+```
+(venv) pi@pi01:~ $ sudo i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:                         -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: 40 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
+```
+This command scans all possible I2C addresses. The output means that the sensor is detected at the address 0x40. 
+USe the minimal code to test:
+```python
+import board
+import busio
+from adafruit_ina3221 import INA3221
+
+i2c = busio.I2C(board.SCL, board.SDA)
+ina = INA3221(i2c)
+
+for i, ch in enumerate(ina):
+    print(f"--- Channel {i+1} ---")
+    print(f"Bus Voltage:   {ch.bus_voltage:.2f} V")
+    print(f"Shunt Voltage: {ch.shunt_voltage*1000:.4f} mV")
+    print(f"Current:       {ch.current:.2f} mA")
+    print("---------------------")
+
+```

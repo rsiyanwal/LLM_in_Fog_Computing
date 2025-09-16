@@ -49,6 +49,7 @@ sudo apt update
 sudo apt install -y raspi-config
 sudo apt install -y i2c-tools python3-pip
 pip install adafruit-circuitpython-ina3221
+pip install adafruit-blinka
 ```
 Then run:
 ```
@@ -77,7 +78,7 @@ You may see an output like this:
 70: -- -- -- -- -- -- -- --
 ```
 This command scans all possible I2C addresses. The output means that the sensor is detected at the address 0x40. 
-USe the minimal code to test:
+Use the minimal code to test:
 ```python
 import board
 import busio
@@ -93,4 +94,8 @@ for i, ch in enumerate(ina):
     print(f"Current:       {ch.current:.2f} mA")
     print("---------------------")
 
+```
+Sometimes, you may need to install on the base image:
+```
+sudo pip3 install --break-system-packages adafruit-blinka adafruit-circuitpython-ina3221
 ```

@@ -1,0 +1,62 @@
+tinyllama_1B_Q3_K_L_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/tinyllama-1.1b-chat-v1.0.Q3_K_L.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+tinyllama_1B_Q4_K_M_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+tinyllama_1B_Q5_K_M_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/tinyllama-1.1b-chat-v1.0.Q5_K_M.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+phi_2_Q3_K_L_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/phi-2.Q3_K_L.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+phi_2_Q4_K_M_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/phi-2.Q4_K_M.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+phi_2_Q5_K_M_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/phi-2.Q5_K_M.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"
+
+qwen2.5_3B_Q5_K_M_greedy_blas:
+  path: "/home/pi/edge-llm-bench/models/qwen2.5-3b-instruct-q5_k_m.gguf"
+  ctx: 512
+  threads: 4
+  batch: 32
+  decoding: "greedy"
+  build: "blas"
+  kvbits: "f16"

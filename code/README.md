@@ -41,6 +41,12 @@ sudo systemctl disable --now ondemand || true
 sudo systemctl enable --now cpufrequtils
 ```
 
+Running the script:
+(One of the examples)
+```
+python3 ./run_benchmarks_04.py   --model_key phi_2_Q4_K_M_greedy_blas   --tasks summarization_xsum
+```
+
 ### Attaching energy sensor to Pi
 Sensor used: WCMCU-3221
 Install:

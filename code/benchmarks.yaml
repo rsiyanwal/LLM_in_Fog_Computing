@@ -1,0 +1,40 @@
+summarization_xsum:
+  dataset: "EdinburghNLP/xsum"
+  split: "validation"
+  n_samples: 3
+  input_field: "document"
+  target_field: "summary"
+  task: "summarization"
+
+qa_squad2:
+  dataset: "squad_v2"
+  split: "validation"
+  n_samples: 3
+  context_field: "context"
+  question_field: "question"
+  answers_field: "answers"
+  task: "qa"
+
+commonsense_hellaswag:
+  dataset: "Rowan/hellaswag"
+  split: "validation"
+  n_samples: 3
+  task: "hellaswag"
+
+math_gsm8k:
+  dataset: "openai/gsm8k"
+  subset: "main"
+  split: "test"
+  n_samples: 3
+  question_field: "question"
+  answer_field: "answer"
+  task: "gsm8k"
+
+translation_flores200:
+  dataset: "facebook/flores"
+  subset: "eng_Latn-hin_Deva"
+  split: "dev"
+  n_samples: 3
+  src_lang: "sentence_eng_Latn"
+  tgt_lang: "sentence_hin_Deva"
+  task: "translation"

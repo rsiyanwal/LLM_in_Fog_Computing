@@ -33,6 +33,5 @@ KERNEL=kernel8
 make bcm2711_defconfig
 make menuconfig
 ```
-
-
+<img width="1361" height="629" alt="menu_to_enable_hugepages" src="https://github.com/user-attachments/assets/c7daed32-cc4c-40f5-9a00-58121a1ffe0b" />
 

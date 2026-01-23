@@ -2,6 +2,7 @@
 ```bash
 while IFS= read -r h; do [ -z "$h" ] && continue; echo "== Copying and running on $h =="; scp -q systemprep_pi.sh pi@"$h":~ || { echo "scp failed for $h"; continue; }; ssh -n -o BatchMode=yes -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new pi@"$h" 'bash ~/systemprep_pi.sh' || echo "ssh/script failed on $h"; done < hosts.txt
 ```
+Alternatively, run [systemprep_pi](https://github.com/rsiyanwal/LLM_in_Fog_Computing/blob/main/systemprep/systemprep_pi.sh), [piforllama.sh](https://github.com/rsiyanwal/LLM_in_Fog_Computing/blob/main/systemprep/piforllama.sh), and [buildllama.sh](https://github.com/rsiyanwal/LLM_in_Fog_Computing/blob/main/systemprep/buildllama.sh) files. Make sure you also have 
 one-time check:
 `~/edge-llm-bench/bin/run_one.sh blas ~/edge-llm-bench/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf ~/edge-llm-bench/prompts/sum.txt 4 512 32 greedy`
 
